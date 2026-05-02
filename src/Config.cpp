@@ -20,6 +20,8 @@ bool Config::loadFromArgs(int argc, char* argv[]) {
                     excludeDirs_.push_back(item);
                 }
             }
+        } else if (arg == "--open") {
+            openAfterGeneration_ = true;
         }
     }
 
@@ -54,4 +56,8 @@ const std::string& Config::outputPath() const {
 
 const std::vector<std::string>& Config::excludeDirs() const {
     return excludeDirs_;
+}
+
+bool Config::shouldOpenAfterGeneration() const {
+    return openAfterGeneration_;
 }

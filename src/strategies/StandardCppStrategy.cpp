@@ -4,7 +4,7 @@
 
 bool StandardCppStrategy::parseClass(const std::string& line, ClassMatch& out) const {
     static const std::regex classRegex(
-        R"(^\s*(class|struct)\s+([A-Za-z_][A-Za-z0-9_]*)(?:\s*:\s*public\s+([A-Za-z_][A-Za-z0-9_]*))?.*)");
+        R"(^\s*(class|struct)\s+([A-Za-z_][A-Za-z0-9_]*)(?:\s*:\s*public\s+([A-Za-z_][A-Za-z0-9_]*))?\s*\{.*)");
 
     std::smatch match;
     if (!std::regex_match(line, match, classRegex)) {

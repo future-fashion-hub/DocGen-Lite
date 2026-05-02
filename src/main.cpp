@@ -3,6 +3,7 @@
 
 #include "Config.h"
 #include "FileScanner.h"
+#include "FileUtils.h"
 #include "HTMLGenerator.h"
 #include "Logger.h"
 #include "Parser.h"
@@ -12,7 +13,7 @@ int main(int argc, char* argv[]) {
 
     Config config;
     if (!config.loadFromArgs(argc, argv)) {
-        logger.error("Usage: docgen -i <input_dir> -o <output_dir> [--exclude dir1,dir2]");
+        logger.error("Usage: docgen -i <input_dir> -o <output_dir> [--exclude dir1,dir2] [--open]");
         return 1;
     }
 
@@ -51,6 +52,16 @@ int main(int argc, char* argv[]) {
         logger.info("Processed files: " + std::to_string(files.size()));
         logger.info("Found classes: " + std::to_string(classCount));
         logger.info("Found functions: " + std::to_string(methodCount));
+
+        if (config.shouldOpenAfterGeneration()) {
+            const std::string indexPath = fileutils::joinPath(config.outputPath(), "index.html");
+            if (fileutils::openInBrowser(indexPath)) {
+                logger.info("Opened documentation: " + indexPath);
+            } else {
+                logger.warning("Could not open documentation automatically: " + indexPath);
+            }
+        }
+
         logger.info("Done.");
     } catch (const std::exception& ex) {
         logger.error(std::string("Fatal error: ") + ex.what());

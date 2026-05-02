@@ -1,6 +1,8 @@
 #include "FileUtils.h"
 
 #include <algorithm>
+#include <cstdlib>
+#include <cstdio>
 #include <cerrno>
 #include <cstring>
 #include <dirent.h>
@@ -8,6 +10,11 @@
 
 #ifdef _WIN32
 #include <direct.h>
+#define RMDIR _rmdir
+#endif
+#ifndef _WIN32
+#include <unistd.h>
+#define RMDIR rmdir
 #endif
 
 namespace {
@@ -124,6 +131,54 @@ std::vector<std::string> listFilesRecursive(const std::string& rootPath) {
     }
 
     return files;
+}
+
+bool openInBrowser(const std::string& path) {
+    const std::string normalized = normalize(path);
+#ifdef _WIN32
+    const std::string command = "start \"\" \"" + normalized + "\"";
+#elif __APPLE__
+    const std::string command = "open \"" + normalized + "\"";
+#else
+    const std::string command = "xdg-open \"" + normalized + "\"";
+#endif
+    return std::system(command.c_str()) == 0;
+}
+
+bool removePathRecursive(const std::string& path) {
+    struct stat info;
+    if (stat(path.c_str(), &info) != 0) {
+        return true;
+    }
+
+    if ((info.st_mode & S_IFDIR) == 0) {
+        return std::remove(path.c_str()) == 0;
+    }
+
+    DIR* dir = opendir(path.c_str());
+    if (dir == nullptr) {
+        return false;
+    }
+
+    bool ok = true;
+    struct dirent* entry = nullptr;
+    while ((entry = readdir(dir)) != nullptr) {
+        const std::string name = entry->d_name;
+        if (name == "." || name == "..") {
+            continue;
+        }
+        const std::string child = joinPath(path, name);
+        if (!removePathRecursive(child)) {
+            ok = false;
+        }
+    }
+    closedir(dir);
+
+    if (!ok) {
+        return false;
+    }
+
+    return RMDIR(path.c_str()) == 0;
 }
 
 }  // namespace fileutils

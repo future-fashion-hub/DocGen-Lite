@@ -1,18 +1,69 @@
+:root {
+    --bg: #f3f5f9;
+    --panel: #ffffff;
+    --text: #132037;
+    --muted: #52617a;
+    --accent: #0e7490;
+    --accent-soft: #d8f3f7;
+    --border: #d9e0ea;
+}
+
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
     font-family: "Segoe UI", Tahoma, sans-serif;
-    background: #f5f7fb;
-    color: #1c2736;
+    color: var(--text);
+    background:
+        radial-gradient(1400px 500px at -10% -20%, #dbeafe, transparent),
+        radial-gradient(1200px 600px at 120% -10%, #d1fae5, transparent),
+        var(--bg);
 }
 
-main {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 24px;
+.layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    min-height: 100vh;
+}
+
+.sidebar {
+    border-right: 1px solid var(--border);
+    background: var(--panel);
+    padding: 20px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: auto;
+}
+
+.content {
+    padding: 28px;
+}
+
+.nav-home {
+    display: inline-block;
+    margin-bottom: 14px;
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.search-box {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+}
+
+.nav-list {
+    margin: 0 0 12px;
+    padding-left: 20px;
 }
 
 a {
-    color: #0057b8;
+    color: var(--accent);
     text-decoration: none;
 }
 
@@ -23,22 +74,63 @@ a:hover {
 h1,
 h2,
 h3 {
-    color: #0d1b2a;
+    margin-top: 0;
 }
 
-code {
-    background: #e8eef7;
-    padding: 2px 6px;
-    border-radius: 4px;
+.lead {
+    color: var(--muted);
 }
 
 ul {
     line-height: 1.6;
 }
 
-.class {
-    border: 1px solid #d7deea;
-    border-radius: 8px;
+code {
+    background: #e8f1f8;
+    padding: 2px 7px;
+    border-radius: 6px;
+}
+
+pre {
+    white-space: pre-wrap;
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 10px;
     padding: 12px;
-    background: #ffffff;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin-bottom: 22px;
+}
+
+.stat {
+    border: 1px solid var(--border);
+    background: var(--panel);
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.stat span {
+    color: var(--muted);
+    display: block;
+}
+
+.stat strong {
+    font-size: 1.5rem;
+}
+
+@media (max-width: 900px) {
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        position: static;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--border);
+    }
 }
