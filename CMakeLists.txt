@@ -5,12 +5,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_executable(docgen)
+include(CTest)
 
-target_include_directories(docgen PRIVATE include)
-
-target_sources(docgen PRIVATE
-    src/main.cpp
+add_library(docgen_core
     src/Config.cpp
     src/FileScanner.cpp
     src/SourceFile.cpp
@@ -27,4 +24,15 @@ target_sources(docgen PRIVATE
     src/strategies/StandardCppStrategy.cpp
 )
 
-file(COPY assets/ DESTINATION ${CMAKE_BINARY_DIR}/assets)
+target_include_directories(docgen_core PUBLIC include)
+
+add_executable(docgen src/main.cpp)
+target_link_libraries(docgen PRIVATE docgen_core)
+
+if(NOT EXISTS "${CMAKE_BINARY_DIR}/assets/style.css")
+    file(COPY assets/ DESTINATION ${CMAKE_BINARY_DIR}/assets)
+endif()
+
+if(BUILD_TESTING)
+    add_subdirectory(tests)
+endif()
