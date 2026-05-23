@@ -15,6 +15,7 @@
 body {
     margin: 0;
     font-family: "Segoe UI", Tahoma, sans-serif;
+    line-height: 1.55;
     color: var(--text);
     background:
         radial-gradient(1400px 500px at -10% -20%, #dbeafe, transparent),
@@ -40,6 +41,7 @@ body {
 
 .content {
     padding: 28px;
+    max-width: 1100px;
 }
 
 .nav-home {
@@ -62,6 +64,10 @@ body {
     padding-left: 20px;
 }
 
+.nav-list li {
+    margin: 4px 0;
+}
+
 a {
     color: var(--accent);
     text-decoration: none;
@@ -75,6 +81,7 @@ h1,
 h2,
 h3 {
     margin-top: 0;
+    letter-spacing: 0.01em;
 }
 
 .lead {
@@ -85,6 +92,10 @@ ul {
     line-height: 1.6;
 }
 
+li {
+    margin-bottom: 6px;
+}
+
 code {
     background: #e8f1f8;
     padding: 2px 7px;
@@ -93,10 +104,19 @@ code {
 
 pre {
     white-space: pre-wrap;
+    word-break: break-word;
     background: #f8fafc;
     border: 1px solid var(--border);
     border-radius: 10px;
     padding: 12px;
+}
+
+.content section {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
 }
 
 .stats {
@@ -111,6 +131,7 @@ pre {
     background: var(--panel);
     border-radius: 10px;
     padding: 12px;
+    box-shadow: 0 1px 0 rgba(18, 33, 56, 0.04);
 }
 
 .stat span {

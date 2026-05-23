@@ -93,3 +93,75 @@ ctest --test-dir build --output-on-failure
 .\build\tests\scenario_parse_sample.exe
 .\build\tests\scenario_generate_html.exe
 ```
+
+Дополнительные документы по тестированию:
+
+- `tests/SCENARIOS.md` — подробные сценарии для отчета
+- `tests/COVERAGE_MATRIX.md` — матрица покрытия тестами
+
+## Контейнеризация (Docker)
+
+### 1) Сборка образа проекта
+
+```bash
+docker build -t docgen:latest .
+```
+
+### 2) Запуск тестов Catch2 внутри контейнера
+
+Есть отдельный тестовый stage `tester`, в котором выполняется `ctest`.
+
+```bash
+docker build --target tester -t docgen:test .
+```
+
+Если сборка stage `tester` завершилась успешно, значит тесты в чистом Linux-окружении прошли.
+
+Чтобы явно увидеть вывод тестов:
+
+```bash
+docker build --no-cache --progress=plain --target tester -t docgen:test .
+```
+
+Или запустить `ctest` напрямую в собранном тестовом образе:
+
+```bash
+docker run --rm --entrypoint ctest docgen:test --test-dir build --output-on-failure -V
+```
+
+### 3) Запуск основной функции контейнера с аргументами
+
+Контейнер принимает те же аргументы, что и `docgen`.
+
+Пример (Linux/macOS shell):
+
+```bash
+docker run --rm -v "$(pwd):/workspace" docgen:latest \
+  -i /workspace/src \
+  -o /workspace/build/docs \
+  --exclude .git,build,out
+```
+
+Пример (PowerShell):
+
+```powershell
+docker run --rm -v "${PWD}:/workspace" docgen:latest `
+  -i /workspace/src `
+  -o /workspace/build/docs `
+  --exclude .git,build,out
+```
+
+### 4) Демонстрация работающего контейнера
+
+Минимальный демонстрационный сценарий:
+
+1. `docker build --target tester -t docgen:test .`
+2. `docker build -t docgen:latest .`
+3. `docker run --rm -v "${PWD}:/workspace" docgen:latest -i /workspace/src -o /workspace/build/docs --exclude .git,build,out`
+4. Проверить, что `build/docs/index.html` создан.
+
+### Примечания по реализации
+
+- Используется многостадийная сборка: `builder`, `tester`, `runtime`.
+- В итоговый runtime-образ не попадают временные файлы сборки.
+- Все зависимости явно установлены в `Dockerfile`.

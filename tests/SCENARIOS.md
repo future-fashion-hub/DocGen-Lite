@@ -1,4 +1,11 @@
 # Тестовые сценарии проекта DocGen Lite
+Запуск:
+Все тесты:
+ctest --test-dir build --output-on-failure
+Сценарии:
+.\build\tests\scenario_cli_run.exe
+.\build\tests\scenario_parse_sample.exe
+.\build\tests\scenario_generate_html.exe
 
 Документ можно использовать как готовый раздел отчета по практической работе.
 

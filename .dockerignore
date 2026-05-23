@@ -1,0 +1,9 @@
+.git
+.gitignore
+build
+tmp_tests
+.vscode
+.idea
+*.swp
+*.tmp
+*.log
